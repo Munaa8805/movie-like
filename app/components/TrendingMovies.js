@@ -7,7 +7,7 @@ import Movie from "./Movie";
 const TrendingMovies = () => {
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(null);
+  const [totalPages, setTotalPages] = useState(1000);
   const [totalResults, setTotalResults] = useState(null);
   const [loading, setLoading] = useState(true);
 

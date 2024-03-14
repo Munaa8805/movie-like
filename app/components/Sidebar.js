@@ -50,7 +50,7 @@ const Sidebar = () => {
     setSelectedGenre(id);
   };
   return (
-    <div className="h-full flex flex-col gap-6 px-3 pb-4 bg-blue-500">
+    <div className="h-full flex flex-col gap-6 px-3 pb-4">
       <section className="h-[50vh] mb-4">
         <h1>Genres</h1>
         <ul className="h-[50vh] space-y-2 font-medium overflow-scroll bg-green-400">
@@ -70,11 +70,15 @@ const Sidebar = () => {
                 <li
                   key={item.id}
                   onClick={() => selectedHandler(item.id)}
-                  className={selectedGenre === item.id ? "bg-red-500" : ""}
+                  className={
+                    selectedGenre === item.id ? "bg-mainBackground" : ""
+                  }
                 >
                   <a
                     href="#"
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-red-500 group"
+                    className={`flex items-center p-2 ${
+                      selectedGenre === item.id ? "text-white" : "text-gray-900"
+                    } rounded-lg hover:bg-mainBackground hover:text-white group`}
                   >
                     <span className="ms-3">{item.name}</span>
                   </a>

@@ -5,15 +5,28 @@ import { usePathname, useRouter } from "next/navigation";
 import { FaGoogle } from "react-icons/fa";
 import Link from "next/link";
 import Logo from "../../public/movielike.svg";
+import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import profileDefault from "@/app/assets/profile.png";
+// import { getSessionUser } from "../../utils/getSessionUser";
 
 const Navbar = () => {
+  const { data: session } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [providers, setProviders] = useState(null);
   const pathname = usePathname();
-  const session = false;
-
+  const router = useRouter();
+  const profileImage = session?.user?.image;
+  useEffect(() => {
+    const setAuthProviders = async () => {
+      const res = await getProviders();
+      setProviders(res);
+    };
+    setAuthProviders();
+  }, []);
+  console.log("session", session);
   return (
-    <nav className="bg-mainBackground border-blue-500">
+    <nav className="bg-blue-700 border-b border-blue-500">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-20 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center md:hidden">
@@ -45,11 +58,7 @@ const Navbar = () => {
           <div className="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
             {/* <!-- Logo --> */}
             <Link className="flex flex-shrink-0 items-center" href="/">
-              <Image className="h-10 w-auto" src={Logo} alt="Movie" />
-
-              {/* <span className="hidden md:block text-white text-2xl font-bold ml-2">
-                Movie
-              </span> */}
+              <Image className="h-10 w-auto" src={Logo} alt="movie" />
             </Link>
             {/* <!-- Desktop Menu Hidden below md screens --> */}
             <div className="hidden md:ml-6 md:block">
@@ -70,17 +79,35 @@ const Navbar = () => {
                 >
                   Movies
                 </Link>
+                {session && (
+                  <Link
+                    href="/movies/favorite"
+                    className={`${
+                      pathname === "/movies/favorite" ? "bg-black " : ""
+                    } text-white  hover:bg-gray-900 hover:text-white rounded-md px-3 py-2`}
+                  >
+                    Favorite Movies
+                  </Link>
+                )}
               </div>
             </div>
           </div>
 
+          {/* <!-- Right Side Menu (Logged Out) --> */}
           {!session && (
             <div className="hidden md:block md:ml-6">
               <div className="flex items-center">
-                <button className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
-                  <FaGoogle className="text-white mr-2" />
-                  <span>Login or Register</span>
-                </button>
+                {providers &&
+                  Object.values(providers).map((provider) => (
+                    <button
+                      key={provider.name}
+                      onClick={() => signIn(provider.id)}
+                      className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
+                    >
+                      <FaGoogle className="text-white mr-2" />
+                      <span>Login or Register</span>
+                    </button>
+                  ))}
               </div>
             </div>
           )}
@@ -164,18 +191,6 @@ const Navbar = () => {
                     >
                       Messages
                     </Link>
-                    <Link
-                      href="/properties/saved"
-                      className="block px-4 py-2 text-sm text-gray-700"
-                      role="menuitem"
-                      tabIndex="-1"
-                      id="user-menu-item-2"
-                      onClick={() => {
-                        setIsProfileMenuOpen(false);
-                      }}
-                    >
-                      Saved Properties
-                    </Link>
                     <button
                       className="block px-4 py-2 text-sm text-gray-700"
                       role="menuitem"
@@ -219,10 +234,28 @@ const Navbar = () => {
             >
               Movies
             </Link>
-
-            <button className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2">
-              <span>Login or Register</span>
-            </button>
+            {session && (
+              <Link
+                onClick={() => setIsMobileMenuOpen(false)}
+                href="/movies/favorite"
+                className={`${
+                  pathname === "/movies/favorite" ? "bg-gray-900" : ""
+                } text-white block rounded-md px-3 py-2 text-base font-medium`}
+              >
+                Favorite Movies
+              </Link>
+            )}
+            {!session &&
+              providers &&
+              Object.values(providers).map((provider) => (
+                <button
+                  key={provider.name}
+                  onClick={() => signIn(provider.id)}
+                  className="flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2"
+                >
+                  <span>Login or Register</span>
+                </button>
+              ))}
           </div>
         </div>
       )}

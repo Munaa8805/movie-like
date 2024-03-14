@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import Spinner from "@/app/components/Spinner";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import EigtheenPlus from "../../assets/18.png";
 
 const MovieDetail = () => {
   const { id } = useParams();
@@ -82,9 +83,22 @@ const MovieDetail = () => {
             priority={true}
           />
         </div>
-        <div className="w-1/2">
+        <div className="w-1/2 relative">
+          {movie.adult ? (
+            <div className="absolute top-2 right-0">
+              <Image
+                src={EigtheenPlus}
+                alt="eightten"
+                className="h-10 w-10"
+                width={0}
+                height={0}
+                sizes="100vw"
+                priority={true}
+              />
+            </div>
+          ) : null}
           <h2>{movie.title}</h2>
-          <h3>{movie.overview}</h3>
+          <h3 className="font-normal text-justify">{movie.overview}</h3>
           <p>
             Released date :{" "}
             <span className="font-bold">{movie.release_date}</span>
@@ -95,6 +109,35 @@ const MovieDetail = () => {
               return <span className="font-bold">{language.name} </span>;
             })}
           </p>
+          <p>
+            Revenue :{" "}
+            <span className="font-bold">
+              {movie.revenue ? `$${movie.revenue.toLocaleString()}` : "0"}
+            </span>
+          </p>
+          <p>
+            Run time :{" "}
+            <span className="font-bold">
+              {movie.runtime ? `${movie.runtime} min` : "0"}
+            </span>
+          </p>
+          <p>
+            Vote average :{" "}
+            <span className="font-bold">
+              {movie.vote_average
+                ? `${movie.vote_average.toFixed(2)} of 9`
+                : ""}
+            </span>
+          </p>
+          <p>
+            Vote count :{" "}
+            <span className="font-bold">
+              {movie.vote_count
+                ? `${movie.vote_count.toLocaleString()} views`
+                : ""}
+            </span>
+          </p>
+
           <ul className="py-4">
             {movie.genres.length > 1 ? "Genres : " : "Genre : "}
 
@@ -112,13 +155,14 @@ const MovieDetail = () => {
                 );
               })}
           </ul>
+          <h3>Production company :</h3>
           <div className="w-full overflow-x-scroll">
             <ul className="flex gap-6">
               {movie.production_companies.map((company) => {
                 return (
                   <li className="w-40 bg-gray-300 p-4 rounded-md  hover:cursor-pointer text-sm text-white">
                     {company.logo_path ? (
-                      <div class="rounded-sm h-25 w-full overflow-hidden mb-4">
+                      <div className="rounded-sm h-25 w-full overflow-hidden mb-4">
                         <Image
                           src={`https://image.tmdb.org/t/p/original/${company.logo_path}}`}
                           alt={movie.title}

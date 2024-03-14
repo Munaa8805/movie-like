@@ -37,9 +37,6 @@ const AllMovies = () => {
         setLoading(false);
       }
     };
-    // if (selectedGenre !== null) {
-    //   fetchGenreMovies();
-    // }
     fetchGenreMovies();
   }, [selectedGenre]);
 

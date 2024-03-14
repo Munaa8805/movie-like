@@ -7,7 +7,7 @@ const Movie = ({ movie }) => {
   return (
     <Link
       href={`/movies/${movie.id}`}
-      className="group bg-white rounded overflow-hidden"
+      className="group bg-gray-200 rounded overflow-hidden"
     >
       <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-t-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
         <Image
